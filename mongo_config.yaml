@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongodb-deployment
+  name: mongodb
   labels:
     app: mongodb
 spec:
@@ -15,13 +15,9 @@ spec:
       labels:
         app: mongodb
     spec:
-      volumes:
-      - name: mypv
-        persistentVolumeClaim:
-          claimName: mongo-pv-claim
       containers:
       - name: mongodb
-        image: mongo:3.6
+        image: mongo
         ports:
         - containerPort: 27017
         env:
@@ -35,6 +31,7 @@ spec:
             secretKeyRef:
               name: mysecret
               key: password
+
        
 
 ---
