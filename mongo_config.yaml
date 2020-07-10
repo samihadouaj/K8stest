@@ -15,16 +15,17 @@ spec:
       labels:
         app: mongodb
     spec:
-      volumes:
-      - name: vol
-        persistentVolumeClaim:
-          claimName: mongo-pv-claim
       containers:
       - name: mongodb
         image: mongo:3.6
+        command:
+        - "mongod"
+        - "--bind_ip"
+        - "0.0.0.0"
+
         volumeMounts:
-        - mountPath: /data/db
-          name: vol
+        - name: pv-data
+          mountPath: /data/db
         ports:
         - containerPort: 27017
         env:
@@ -37,9 +38,17 @@ spec:
           valueFrom: 
             secretKeyRef:
               name: mysecret
-              key: password
-       
-
+              key: password  
+  volumeClaimTemplates:
+  - metadata:
+      name: pv-data
+    spec:
+      accessModes: 
+        - ReadWriteOnce
+      storageClassName: fast
+      resources:
+        requests:
+          storage: 50Mi
 ---
 apiVersion: v1
 kind: Service
