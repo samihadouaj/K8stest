@@ -16,12 +16,15 @@ spec:
         app: mongodb
     spec:
       volumes:
-      - name: mypv
+      - name: vol
         persistentVolumeClaim:
           claimName: mongo-pv-claim
       containers:
       - name: mongodb
         image: mongo:3.6
+        volumeMounts:
+        - mountPath: /data/db
+          name: vol
         ports:
         - containerPort: 27017
         env:
